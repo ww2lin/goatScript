@@ -84,18 +84,20 @@
         }
       }
       
+      function unSelectGoat(){
+        selectedGoat.style.padding = 'auto';
+        selectedGoat.style.background = 'none';
+        selectedGoat.style.border = 'none';
+        selectedGoat = null;
+      }
+
       function onGoatSelected(){
-             if (selectedGoat !== null){
-                selectedGoat.style.padding = 'auto';
-                selectedGoat.style.background = 'none';
-                selectedGoat.style.border = 'none';
-             }
-             if(this.style.borderStyle == imgProp.borderStyle) {
-                this.style.padding = 'auto';
-                this.style.background = 'none';
-                this.style.border = 'none';
-              }
-              else {
+             if (selectedGoat == this){
+               unSelectGoat(); 
+             } else if (this !== selectedGoat) {
+                if (selectedGoat !== null){
+                  unSelectGoat();
+                }
                 this.style.padding = imgProp.padding;
                 this.style.backgroundColor = imgProp.backgroundColor;
                 this.style.borderSize = imgProp.borderSize;
