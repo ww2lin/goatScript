@@ -9,6 +9,7 @@
       google.load('search', '1');
  
       var imageSearch;
+      var selectedGoat = null;
       var imgProp = {
           'padding': '3px',
           'backgroundColor': '#eded01',
@@ -84,6 +85,11 @@
       }
       
       function onGoatSelected(){
+             if (selectedGoat !== null){
+                selectedGoat.style.padding = 'auto';
+                selectedGoat.style.background = 'none';
+                selectedGoat.style.border = 'none';
+             }
              if(this.style.borderStyle == imgProp.borderStyle) {
                 this.style.padding = 'auto';
                 this.style.background = 'none';
@@ -95,6 +101,7 @@
                 this.style.borderSize = imgProp.borderSize;
                 this.style.borderStyle = imgProp.borderStyle;
                 this.style.borderColor = imgProp.borderColor;
+                selectedGoat = this;
               } 
       }      
  
