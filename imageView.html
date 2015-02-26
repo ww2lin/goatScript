@@ -5,18 +5,10 @@
     <title>Google Search API Sample</title>
     <script src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
-            
-        var imgProp = {
-          'padding': '3px',
-          'backgroundColor': '#eded01',
-          'borderSize': '1ps',
-          'borderStyle': 'dashed',
-          'borderColor': '#0001fe'
-        }; 
+ 
       google.load('search', '1');
  
       var imageSearch;
-      var selectedGoat;
  
       function addPaginationLinks() {
  
@@ -35,7 +27,7 @@
  
             // Create links to other pages using gotoPage() on the searcher.
             var link = document.createElement('a');
-            link.href="javascript:imageSearch.gotoPage("+i+');';
+            link.href="javascript:imageSearch.gotoPage("+i+');'; 
             link.innerHTML = page.label;
             link.style.marginRight = '2px';
             pagesDiv.appendChild(link);
@@ -74,40 +66,14 @@
             imgContainer.appendChild(newImg);
  
             // Put our title + image in the content
-            contentDiv.appendChid(imgContainer);
-            
-            // bind the image click listener
-            newImg.onclick = onGoatSelected;
+            contentDiv.appendChild(imgContainer);
           }
  
           // Now add links to additional pages of search results.
           addPaginationLinks(imageSearch);
         }
       }
-
-      function onGoatSelected(){
-        // unselect the old goat
-        if (selectedGoat !== null) {
-          selectedGoat.style.padding = 'auto';
-          selectedGoat.style.background = 'none';
-          selectedGoat.border = 'none';
-        }
-        if(this.style.borderStyle == imgProp.borderStyle) {
-          this.style.padding = 'auto';
-          this.style.background = 'none';
-          this.style.border = 'none';
-          }
-        else {
-          this.style.padding = imgProp.padding;
-          this.style.backgroundColor = imgProp.backgroundColor;
-          this.style.borderSize = imgProp.borderSize;
-          this.style.borderStyle = imgProp.borderStyle;
-          this.style.borderColor = imgProp.borderColor;
-          selectedGoat = this;
-        }  
-
-      }
-      
+ 
       function OnLoad() {
  
         // Create an Image Search instance.
@@ -117,7 +83,7 @@
         // complete.  The imageSearch object will have results in it.
         imageSearch.setSearchCompleteCallback(this, searchComplete, null);
  
-        // Give me some goats!!
+        // Find me a beautiful car.
         imageSearch.execute("goat");
  
         // Include the required Google branding
