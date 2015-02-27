@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Auto Goat</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link href="css/thumbnail-gallery.css" rel="stylesheet">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+ 
+      google.load('search', '1');
+ 
+      var imageSearch;
+      var selectedGoat = null;
+      var imgProp = {
+          'padding': '3px',
+          'backgroundColor': '#eded01',
+          'borderSize': '1ps',
+          'borderStyle': 'dashed',
+          'borderColor': '#0001fe'
+      };
+
+ 
+      function addPaginationLinks() {
+ 
+        // To paginate search results, use the cursor function.
+        var cursor = imageSearch.cursor;
+        var curPage = cursor.currentPageIndex; // check what page the app is on
+        var pagesDiv = document.createElement('div');
+        for (var i = 0; i < cursor.pages.length; i++) {
+          var page = cursor.pages[i];
+          if (curPage == i) {
+ 
+          // If we are on the current page, then don't make a link.
+            var label = document.createTextNode(' ' + page.label + ' ');
+            pagesDiv.appendChild(label);
+          } else {
+ 
+            // Create links to other pages using gotoPage() on the searcher.
+            var link = document.createElement('a');
+            link.href="javascript:imageSearch.gotoPage("+i+');'; 
+            link.innerHTML = page.label;
+            link.style.marginRight = '2px';
+            pagesDiv.appendChild(link);
+          }
+        }
+ 
+        var contentDiv = document.getElementById('content_pages');
+        contentDiv.innerHTML = ''
+        contentDiv.appendChild(pagesDiv);
+      }
+ 
+      function searchComplete() {
+ 
+        // Check that we got results
+        if (imageSearch.results && imageSearch.results.length > 0) {
+ 
+          // Grab our content div, clear it.
+          var contentDiv = document.getElementById('content_row');
+          contentDiv.innerHTML = '';
+
+          // Loop through our results, printing them to the page.
+          var results = imageSearch.results;
+          for (var i = 0; i < results.length; i++) {
+            // For each result write it's title and image to the screen
+            var result = results[i];
+            var imgContainer = document.createElement('div');
+            imgContainer.className = imgContainer.className + "col-lg-3 col-md-4 col-xs-6 thumb";
+            var title = document.createElement('div');
+ 
+            // We use titleNoFormatting so that no HTML tags are left in the
+            // title
+            title.innerHTML = result.titleNoFormatting;
+            var newImg = document.createElement('img');
+            newImg.className = newImg.className + "img-responsive";
+ 
+            // There is also a result.url property which has the escaped version
+            newImg.src=result.tbUrl;
+            newImg.onclick = onGoatSelected;
+            imgContainer.appendChild(title);
+            imgContainer.appendChild(newImg);
+ 
+            // Put our title + image in the content
+            contentDiv.appendChild(imgContainer);
+          }
+         
+          // Now add links to additional pages of search results.
+          addPaginationLinks(imageSearch);
+        }
+      }
+      
+      function unSelectGoat(){
+        selectedGoat.style.padding = 'auto';
+        selectedGoat.style.background = 'none';
+        selectedGoat.style.border = 'none';
+        selectedGoat = null;
+      }
+
+      function onGoatSelected(){
+             if (selectedGoat == this){
+               unSelectGoat(); 
+             } else if (this !== selectedGoat) {
+                if (selectedGoat !== null){
+                  unSelectGoat();
+                }
+                this.style.padding = imgProp.padding;
+                this.style.backgroundColor = imgProp.backgroundColor;
+                this.style.borderSize = imgProp.borderSize;
+                this.style.borderStyle = imgProp.borderStyle;
+                this.style.borderColor = imgProp.borderColor;
+                selectedGoat = this;
+              } 
+      }
+
+      function SearchLoad() {
+        search_str = document.getElementById('query_str').value;
+
+        if (search_str) {
+          // Create an Image Search instance.
+          imageSearch = new google.search.ImageSearch();
+
+          // Set searchComplete as the callback function when a search is
+          // complete.  The imageSearch object will have results in it.
+          imageSearch.setSearchCompleteCallback(this, searchComplete, null);
+
+          // Find me a beautiful car.
+          imageSearch.execute(search_str);
+        }
+ 
+        // Include the required Google branding
+        // google.search.Search.getBranding('branding');  
+      }
+
+      google.setOnLoadCallback(SearchLoad);
+
+      var sendGmail = function(opts){
+        var str = 'http://mail.google.com/mail/?view=cm&fs=1'+
+                  '&to=' + opts.to +
+                  '&su=' + opts.subject +
+                  '&body=' + selectedGoat.src +
+                  '&htmlBody=' + "<img src=\""+selectedGoat.src+"\">" +
+                  '&ui=1';
+        location.href = str;
+        //$(location).attr('href',str);
+        $.ajax({
+            url : str,
+            success : function(result){
+                console.log(result);
+            }
+        });
+      };
+      opts = {};
+      opts["to"] = "ajen@yelp.com";
+      opts["subject"] = "got subject";
+      opts["message"] = "body message";
+    </script>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand">Auto Goat</a>
+            </div>
+
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                    <div class="col-sm-6 col-md-6">
+                        <form class="navbar-form" role="search" method="get" id="search-form" name="search-form">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Sleeping Goat, Popcorn Goat, Drunk Goat ..." id="query_str" name="query" value="">
+                                    <div class="input-group-btn">
+                                <button type="button" class="btn btn-success" onclick="SearchLoad()"><span class="glyphicon glyphicon-search"></span></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container">
+
+        <div class="col-lg-12">
+            <h1 class="page-header">Goat Gallery</h1>
+        </div>
+
+        <div class="row" id="content_row">
+        </div>
+
+        <a href='javascript: sendGmail(opts)'><button type="button" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> Send</button></a>
+            <div class="row">
+         <div id="content_pages" style="float-right"></div>
+
+        <hr>
+
+        <!-- Footer -->
+        <footer>
+                <div class="col-lg-12">
+                    <p>Copyright &copy; Your Website 2014</p>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+    <!-- /.container -->
+
+</body>
+
+</html>
