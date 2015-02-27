@@ -105,24 +105,28 @@
                 this.style.borderColor = imgProp.borderColor;
                 selectedGoat = this;
               } 
-      }      
- 
-      function OnLoad() {
- 
-        // Create an Image Search instance.
-        imageSearch = new google.search.ImageSearch();
- 
-        // Set searchComplete as the callback function when a search is
-        // complete.  The imageSearch object will have results in it.
-        imageSearch.setSearchCompleteCallback(this, searchComplete, null);
- 
-        // Find me a beautiful car.
-        imageSearch.execute("goat");
+      }
+
+      function SearchLoad() {
+        search_str = document.getElementById('link_id').value;
+
+        if (search_str) {
+          // Create an Image Search instance.
+          imageSearch = new google.search.ImageSearch();
+
+          // Set searchComplete as the callback function when a search is
+          // complete.  The imageSearch object will have results in it.
+          imageSearch.setSearchCompleteCallback(this, searchComplete, null);
+
+          // Find me a beautiful car.
+          imageSearch.execute(search_str);
+        }
  
         // Include the required Google branding
         google.search.Search.getBranding('branding');
       }
-      google.setOnLoadCallback(OnLoad);
+
+      google.setOnLoadCallback(SearchLoad);
 
       var sendGmail = function(opts){
         var str = 'http://mail.google.com/mail/?view=cm&fs=1'+
@@ -141,6 +145,8 @@
   </head>
   <body style="font-family: Arial;border: 0 none;">
     <div id="branding"  style="float: left;"></div><br />
+    <input type='text' id='link_id' value='goat'>
+    <input type='button' id='link' value='Search' onClick='javascript:SearchLoad()'>
     <div id="content">Loading...</div>
     <a href='javascript: sendGmail(opts)'> Send </a>
   </body>
